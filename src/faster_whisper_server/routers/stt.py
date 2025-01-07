@@ -182,7 +182,7 @@ def translate_file(
     response_format: Annotated[ResponseFormat | None, Form()] = None,
     temperature: Annotated[float, Form()] = 0.0,
     stream: Annotated[bool, Form()] = False,
-    vad_filter: Annotated[bool, Form()] = False,
+    vad_filter: Annotated[bool, Form()] = True,
 ) -> Response | StreamingResponse:
     if model is None:
         model = config.whisper.model
@@ -240,7 +240,7 @@ def transcribe_file(
     ] = ["segment"],
     stream: Annotated[bool, Form()] = False,
     hotwords: Annotated[str | None, Form()] = None,
-    vad_filter: Annotated[bool, Form()] = False,
+    vad_filter: Annotated[bool, Form()] = True,
 ) -> Response | StreamingResponse:
     if model is None:
         model = config.whisper.model
@@ -313,7 +313,7 @@ async def transcribe_stream(
     language: Annotated[Language | None, Query()] = None,
     response_format: Annotated[ResponseFormat | None, Query()] = None,
     temperature: Annotated[float, Query()] = 0.0,
-    vad_filter: Annotated[bool, Query()] = False,
+    vad_filter: Annotated[bool, Query()] = True,
 ) -> None:
     if model is None:
         model = config.whisper.model

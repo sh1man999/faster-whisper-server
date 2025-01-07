@@ -23,4 +23,5 @@ volumes:
       driver_opts:
         type: none
         o: bind
-        device: E:/Coding/Projects/audio_neural/cache
+        # E:/Coding/Projects/audio_neural/cache
+        device: ./cache
