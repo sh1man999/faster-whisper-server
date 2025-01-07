@@ -254,7 +254,7 @@ def transcribe_file(
             "It only makes sense to provide `timestamp_granularities[]` when `response_format` is set to `verbose_json`. See https://platform.openai.com/docs/api-reference/audio/createTranscription#audio-createtranscription-timestamp_granularities."  # noqa: E501
         )
     with model_manager.load_model(model) as whisper:
-        whisper_model = BatchedInferencePipeline(model=whisper) if config.whisper.use_batched_mode else whisper
+        whisper_model = BatchedInferencePipeline(model=whisper)
         segments, transcription_info = whisper_model.transcribe(
             audio,
             task=Task.TRANSCRIBE,

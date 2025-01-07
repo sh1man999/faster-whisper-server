@@ -1,0 +1,26 @@
+# include:
+#   - compose.observability.yaml
+services:
+  faster-whisper-server:
+    extends:
+      file: compose.yaml
+      service: faster-whisper-server
+    image: sh1man/faster-whisper-server:latest-cuda
+    build:
+      args:
+        BASE_IMAGE: nvidia/cuda:12.6.2-cudnn-runtime-ubuntu24.04
+    env_file: .env
+    volumes:
+      - hugging_face_cache:/root/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: ["gpu"]
+volumes:
+  hugging_face_cache:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: E:/Coding/Projects/audio_neural/cache

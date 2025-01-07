@@ -1,0 +1,14 @@
+# TODO: https://docs.astral.sh/uv/guides/integration/docker/#configuring-watch-with-docker-compose
+services:
+  faster-whisper-server:
+    container_name: faster-whisper-server
+    build:
+      dockerfile: Dockerfile
+      context: .
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    develop:
+      watch:
+        - path: faster_whisper_server
+          action: rebuild
