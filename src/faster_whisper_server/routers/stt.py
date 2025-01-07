@@ -189,7 +189,7 @@ def translate_file(
     if response_format is None:
         response_format = config.default_response_format
     with model_manager.load_model(model) as whisper:
-        whisper_model = BatchedInferencePipeline(model=whisper) if config.whisper.use_batched_mode else whisper
+        whisper_model = BatchedInferencePipeline(model=whisper)
         segments, transcription_info = whisper_model.transcribe(
             audio,
             task=Task.TRANSLATE,

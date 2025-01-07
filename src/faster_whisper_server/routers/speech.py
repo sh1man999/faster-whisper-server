@@ -17,7 +17,7 @@ from faster_whisper_server.hf_utils import read_piper_voices_config
 DEFAULT_MODEL = "piper"
 # https://platform.openai.com/docs/api-reference/audio/createSpeech#audio-createspeech-response_format
 DEFAULT_RESPONSE_FORMAT = "mp3"
-DEFAULT_VOICE = "en_US-amy-medium"  # TODO: make configurable
+DEFAULT_VOICE = "ru_RU-irina-medium"  # TODO: make configurable
 DEFAULT_VOICE_SAMPLE_RATE = 22050  # NOTE: Dependant on the voice
 
 # https://platform.openai.com/docs/api-reference/audio/createSpeech#audio-createspeech-model
