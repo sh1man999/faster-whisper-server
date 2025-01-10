@@ -12,11 +12,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from faster_whisper_server.dependencies import ApiKeyDependency, get_config, get_model_manager
 from faster_whisper_server.logger import setup_logger
-from faster_whisper_server.routers.misc import (
-    router as misc_router,
-)
 from faster_whisper_server.routers.models import (
     router as models_router,
+)
+from faster_whisper_server.routers.misc import (
+    router as misc_router,
 )
 from faster_whisper_server.routers.stt import (
     router as stt_router,
@@ -45,7 +45,6 @@ def create_app() -> FastAPI:
     logger = logging.getLogger(__name__)
 
     logger.debug(f"Config: {config}")
-
     if platform.machine() == "x86_64":
         from faster_whisper_server.routers.speech import (
             router as speech_router,
@@ -66,7 +65,7 @@ def create_app() -> FastAPI:
     if config.api_key is not None:
         dependencies.append(ApiKeyDependency)
 
-    app = FastAPI(lifespan=lifespan, dependencies=dependencies, openapi_tags=TAGS_METADATA)
+    app = FastAPI(lifespan=lifespan, dependencies=dependencies)
 
     app.include_router(stt_router)
     app.include_router(models_router)

@@ -38,7 +38,6 @@ class Quantization(enum.StrEnum):
     DEFAULT = "default"
 
 
-# TODO: this needs to be rethought
 class Language(enum.StrEnum):
     AF = "af"
     AM = "am"
@@ -150,17 +149,17 @@ class Task(enum.StrEnum):
 class WhisperConfig(BaseModel):
     """See https://github.com/SYSTRAN/faster-whisper/blob/master/faster_whisper/transcribe.py#L599."""
 
-    model: str = Field(default="Systran/faster-whisper-small")
+    model: str = Field(default="Systran/faster-whisper-large-v3")
     """
-    Default HuggingFace model to use for transcription. Note, the model must support being ran using CTranslate2.
+    Default Huggingface model to use for transcription. Note, the model must support being ran using CTranslate2.
     This model will be used if no model is specified in the request.
 
     Models created by authors of `faster-whisper` can be found at https://huggingface.co/Systran
     You can find other supported models at https://huggingface.co/models?p=2&sort=trending&search=ctranslate2 and https://huggingface.co/models?sort=trending&search=ct2
     """
-    inference_device: Device = Field(default=Device.AUTO)
+    inference_device: Device = Field(default=Device.CUDA)
     device_index: int | list[int] = 0
-    compute_type: Quantization = Field(default=Quantization.DEFAULT)
+    compute_type: Quantization = Field(default=Quantization.FLOAT16)
     cpu_threads: int = 0
     num_workers: int = 1
     ttl: int = Field(default=300, ge=-1)
@@ -169,13 +168,8 @@ class WhisperConfig(BaseModel):
     -1: Never unload the model.
     0: Unload the model immediately after usage.
     """
-    use_batched_mode: bool = False
-    """
-    Whether to use batch mode(introduced in 1.1.0 `faster-whisper` release) for inference. This will likely become the default in the future and the configuration option will be removed.
-    """  # noqa: E501
 
 
-# TODO: document `alias` behaviour within the docstring
 class Config(BaseSettings):
     """Configuration for the application. Values can be set via environment variables.
 
@@ -187,13 +181,7 @@ class Config(BaseSettings):
     model_config = SettingsConfigDict(env_nested_delimiter="__")
 
     api_key: str | None = None
-    """
-    If set, the API key will be required for all requests.
-    """
     log_level: str = "debug"
-    """
-    Logging level. One of: 'debug', 'info', 'warning', 'error', 'critical'.
-    """
     host: str = Field(alias="UVICORN_HOST", default="0.0.0.0")
     port: int = Field(alias="UVICORN_PORT", default=8000)
     allow_origins: list[str] | None = None
@@ -204,12 +192,12 @@ class Config(BaseSettings):
         `export ALLOW_ORIGINS='["*"]'`
     """
 
-    enable_ui: bool = True
+    enable_ui: bool = False
     """
-    Whether to enable the Gradio UI. You may want to disable this if you want to minimize the dependencies and slightly improve the startup time.
-    """  # noqa: E501
+    Whether to enable the Gradio UI. You may want to disable this if you want to minimize the dependencies.
+    """
 
-    default_language: Language | None = None
+    default_language: Language | None = Language.RU
     """
     Default language to use for transcription. If not set, the language will be detected automatically.
     It is recommended to set this as it will improve the performance.
@@ -219,48 +207,31 @@ class Config(BaseSettings):
     preload_models: list[str] = Field(
         default_factory=list,
         examples=[
-            ["Systran/faster-whisper-small"],
-            ["Systran/faster-whisper-medium.en", "Systran/faster-whisper-small.en"],
+            ["Systran/faster-whisper-large-v3"],
+            ["Systran/faster-distil-whisper-large-v3", "Systran/faster-distil-whisper-large-v2"],
         ],
     )
     """
-    List of Whisper models to preload on startup. By default, the model is first loaded on first request.
-    WARNING: I'd recommend not setting this, as it may be deprecated in the future.
+    List of models to preload on startup. By default, the model is first loaded on first request.
     """
     max_no_data_seconds: float = 1.0
     """
     Max duration to wait for the next audio chunk before transcription is finilized and connection is closed.
-    Used only for live transcription (WS /v1/audio/transcriptions).
     """
     min_duration: float = 1.0
     """
     Minimum duration of an audio chunk that will be transcribed.
-    Used only for live transcription (WS /v1/audio/transcriptions).
     """
     word_timestamp_error_margin: float = 0.2
-    """
-    Used only for live transcription (WS /v1/audio/transcriptions).
-    """
     max_inactivity_seconds: float = 2.5
     """
     Max allowed audio duration without any speech being detected before transcription is finilized and connection is closed.
-    Used only for live transcription (WS /v1/audio/transcriptions).
     """  # noqa: E501
     inactivity_window_seconds: float = 5.0
     """
-    Controls how many latest seconds of audio are being passed through VAD. Should be greater than `max_inactivity_seconds`.
-    Used only for live transcription (WS /v1/audio/transcriptions).
-    """  # noqa: E501
+    Controls how many latest seconds of audio are being passed through VAD.
+    Should be greater than `max_inactivity_seconds`
+    """
 
-    # NOTE: options below are not used yet and should be ignored. Added as a placeholder for future features I'm currently working on.  # noqa: E501
-
-    chat_completion_base_url: str = "https://api.openai.com/v1"
-    chat_completion_api_key: str | None = None
-
-    speech_base_url: str | None = None
-    speech_api_key: str | None = None
     speech_model: str = "piper"
     speech_extra_body: dict = {"sample_rate": 24000}
-
-    transcription_base_url: str | None = None
-    transcription_api_key: str | None = None

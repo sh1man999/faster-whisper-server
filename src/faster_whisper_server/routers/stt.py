@@ -182,14 +182,14 @@ def translate_file(
     response_format: Annotated[ResponseFormat | None, Form()] = None,
     temperature: Annotated[float, Form()] = 0.0,
     stream: Annotated[bool, Form()] = False,
-    vad_filter: Annotated[bool, Form()] = False,
+    vad_filter: Annotated[bool, Form()] = True,
 ) -> Response | StreamingResponse:
     if model is None:
         model = config.whisper.model
     if response_format is None:
         response_format = config.default_response_format
     with model_manager.load_model(model) as whisper:
-        whisper_model = BatchedInferencePipeline(model=whisper) if config.whisper.use_batched_mode else whisper
+        whisper_model = BatchedInferencePipeline(model=whisper)
         segments, transcription_info = whisper_model.transcribe(
             audio,
             task=Task.TRANSLATE,
@@ -240,7 +240,7 @@ def transcribe_file(
     ] = ["segment"],
     stream: Annotated[bool, Form()] = False,
     hotwords: Annotated[str | None, Form()] = None,
-    vad_filter: Annotated[bool, Form()] = False,
+    vad_filter: Annotated[bool, Form()] = True,
 ) -> Response | StreamingResponse:
     if model is None:
         model = config.whisper.model
@@ -254,7 +254,7 @@ def transcribe_file(
             "It only makes sense to provide `timestamp_granularities[]` when `response_format` is set to `verbose_json`. See https://platform.openai.com/docs/api-reference/audio/createTranscription#audio-createtranscription-timestamp_granularities."  # noqa: E501
         )
     with model_manager.load_model(model) as whisper:
-        whisper_model = BatchedInferencePipeline(model=whisper) if config.whisper.use_batched_mode else whisper
+        whisper_model = BatchedInferencePipeline(model=whisper)
         segments, transcription_info = whisper_model.transcribe(
             audio,
             task=Task.TRANSCRIBE,
@@ -313,7 +313,7 @@ async def transcribe_stream(
     language: Annotated[Language | None, Query()] = None,
     response_format: Annotated[ResponseFormat | None, Query()] = None,
     temperature: Annotated[float, Query()] = 0.0,
-    vad_filter: Annotated[bool, Query()] = False,
+    vad_filter: Annotated[bool, Query()] = True,
 ) -> None:
     if model is None:
         model = config.whisper.model
