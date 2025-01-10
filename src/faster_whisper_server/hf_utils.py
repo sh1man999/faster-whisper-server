@@ -112,16 +112,16 @@ class PiperModel(BaseModel):
     owned_by: Literal["rhasspy"] = "rhasspy"
     model_path: Path = Field(
         examples=[
-            "/home/nixos/.cache/huggingface/hub/models--rhasspy--piper-voices/snapshots/3d796cc2f2c884b3517c527507e084f7bb245aea/en/en_US/amy/medium/en_US-amy-medium.onnx"
+            "/home/nixos/.cache/huggingface/hub/models--rhasspy--piper-voices/snapshots/3d796cc2f2c884b3517c527507e084f7bb245aea/ru/ru_RU/ruslan/medium/ru_RU-ruslan-medium.onnx"
         ]
     )
 
-    @computed_field(examples=["rhasspy/piper-voices/en_US-amy-medium"])
+    @computed_field(examples=["rhasspy/piper-voices/ru_RU-ruslan-medium"])
     @cached_property
     def id(self) -> str:
         return f"rhasspy/piper-voices/{self.model_path.name.removesuffix(".onnx")}"
 
-    @computed_field(examples=["rhasspy/piper-voices/en_US-amy-medium"])
+    @computed_field(examples=["rhasspy/piper-voices/ru_RU-ruslan-medium"])
     @cached_property
     def voice(self) -> str:
         return self.model_path.name.removesuffix(".onnx")
