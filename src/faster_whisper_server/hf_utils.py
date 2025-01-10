@@ -1,5 +1,5 @@
 from collections.abc import Generator
-from functools import lru_cache
+from functools import cached_property, lru_cache
 import json
 import logging
 from pathlib import Path
@@ -8,7 +8,7 @@ from typing import Any, Literal
 
 import huggingface_hub
 from huggingface_hub.constants import HF_HUB_CACHE
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, computed_field
 
 from faster_whisper_server.api_models import Model
 

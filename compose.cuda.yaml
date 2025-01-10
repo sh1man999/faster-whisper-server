@@ -11,7 +11,7 @@ services:
         BASE_IMAGE: nvidia/cuda:12.6.2-cudnn-runtime-ubuntu24.04
     env_file: .env
     volumes:
-      - hugging_face_cache:/root/.cache/huggingface
+      - hugging_face_cache:/home/ubuntu/.cache/huggingface
     deploy:
       resources:
         reservations:

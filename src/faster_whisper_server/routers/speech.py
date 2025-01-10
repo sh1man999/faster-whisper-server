@@ -17,7 +17,7 @@ from faster_whisper_server.hf_utils import read_piper_voices_config
 DEFAULT_MODEL = "piper"
 # https://platform.openai.com/docs/api-reference/audio/createSpeech#audio-createspeech-response_format
 DEFAULT_RESPONSE_FORMAT = "mp3"
-DEFAULT_VOICE = "ru_RU-irina-medium"  # TODO: make configurable
+DEFAULT_VOICE = "ru_RU-ruslan-medium"  # TODO: make configurable
 DEFAULT_VOICE_SAMPLE_RATE = 22050  # NOTE: Dependant on the voice
 
 # https://platform.openai.com/docs/api-reference/audio/createSpeech#audio-createspeech-model
@@ -39,7 +39,7 @@ MAX_SAMPLE_RATE = 48000
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter()
+router = APIRouter(tags=["speech-to-text"])
 
 
 # aip 'Write a function `resample_audio` which would take in RAW PCM 16-bit signed, little-endian audio data represented as bytes (`audio_bytes`) and resample it (either downsample or upsample) from `sample_rate` to `target_sample_rate` using numpy'  # noqa: E501
