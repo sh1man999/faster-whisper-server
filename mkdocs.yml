@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 site_name: Faster Whisper Server Documentation
-repo_url: https://github.com/sh1man/faster-whisper-server
+repo_url: https://github.com/fedirz/faster-whisper-server
 theme:
-  language: ru
+  language: en
   name: material
   palette:
     scheme: default
@@ -20,7 +20,10 @@ plugins:
   - mkdocstrings:
       default_handler: python
 nav:
-  - Home: index.md
+  - Introduction: introduction.md
+  - Installation: installation.md
+  - Configuration: configuration.md
+  - Usage: usage.md
 markdown_extensions:
   - admonition
   - pymdownx.superfences

@@ -5,23 +5,18 @@ services:
     extends:
       file: compose.yaml
       service: faster-whisper-server
-    image: sh1man/faster-whisper-server:latest-cuda
+    image: fedirz/faster-whisper-server:latest-cuda
     build:
       args:
         BASE_IMAGE: nvidia/cuda:12.6.2-cudnn-runtime-ubuntu24.04
-    env_file: .env
+    environment:
+      - WHISPER__MODEL=Systran/faster-whisper-large-v3
     volumes:
-      - hugging_face_cache:/home/ubuntu/.cache/huggingface
+      - hf-hub-cache:/home/ubuntu/.cache/huggingface/hub
     deploy:
       resources:
         reservations:
           devices:
             - capabilities: ["gpu"]
 volumes:
-  hugging_face_cache:
-      driver: local
-      driver_opts:
-        type: none
-        o: bind
-        # E:/Coding/Projects/audio_neural/cache
-        device: ./cache
+  hf-hub-cache:
